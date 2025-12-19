@@ -230,4 +230,4 @@ with st.expander("ℹ️ About this Application"):
     **Reports:** DOCX and Premium PDF download  
     """)
 
-st.markdown("<p class='footer'>© 2025 | Designed by Abhijit Shete</p>", unsafe_allow_html=True)
+st.markdown("<p class='footer'>© 2025 | Designed By Abhijit Shete</p>", unsafe_allow_html=True)
