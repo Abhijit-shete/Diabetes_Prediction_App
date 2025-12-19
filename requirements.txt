@@ -1,4 +1,8 @@
 streamlit
+pandas
 numpy
 scikit-learn
 joblib
+fpdf
+python-docx
+matplotlib
