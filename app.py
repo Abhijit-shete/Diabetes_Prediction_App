@@ -20,6 +20,14 @@ body {
     text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
 }
 
+.version-tag {
+    display:block;
+    text-align:center;
+    font-size:18px;
+    color:#2e7d32;
+    margin-top:-10px;
+}
+
 .stButton>button {
     background: linear-gradient(to right, #4caf50, #2e7d32) !important;
     color: white !important;
@@ -58,12 +66,24 @@ body {
     font-size:16px;
     color:#2e7d32;
 }
+
+.footer {
+    text-align:center;
+    margin-top:40px;
+    font-size:16px;
+    color:#1B5E20;
+    opacity:0.8;
+}
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------- App Title ----------------
 st.markdown("<h1 class='main-title'>🩺 Diabetes Prediction System</h1>", unsafe_allow_html=True)
+
+# Version Tag
+st.markdown("<small class='version-tag'>Version 2.4</small>", unsafe_allow_html=True)
+
 st.markdown("---")
 
 # ---------------- Sidebar Inputs ----------------
@@ -88,6 +108,7 @@ if predict:
     data = pd.DataFrame([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]],
                         columns=["Pregnancies","Glucose","BloodPressure","SkinThickness",
                                  "Insulin","BMI","DiabetesPedigreeFunction","Age"])
+
     data_scaled = scaler.transform(data)
     prediction = model.predict(data_scaled)
 
@@ -110,3 +131,6 @@ with st.expander("ℹ️ About this Application"):
     **Scaling:** StandardScaler  
     **Accuracy:** ~80-90% depending on dataset
     """)
+
+# ---------------- Footer ----------------
+st.markdown("<p class='footer'>Design by <b>Abhijit Shete</b></p>", unsafe_allow_html=True)
