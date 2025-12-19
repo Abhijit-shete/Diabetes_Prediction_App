@@ -84,7 +84,6 @@ st.markdown("---")
 
 # ---------------- Sidebar Inputs ----------------
 st.sidebar.header("📌 Enter Your Health Details or Upload CSV")
-
 file = st.sidebar.file_uploader("Upload CSV to auto-fill values", type=["csv"])
 
 pregnancies = glucose = bp = skin = insulin = bmi = dpf = age = None
@@ -132,7 +131,7 @@ def generate_pdf(result, values):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", 'B', 14)
-    result_safe = result.replace("—", "-")  # em dash → hyphen
+    result_safe = result.replace("—", "-")
     pdf.cell(200, 10, txt="Diabetes Prediction Report", ln=True, align='C')
     pdf.ln(5)
     pdf.set_font("Arial", size=12)
@@ -144,8 +143,8 @@ def generate_pdf(result, values):
     for key, value in values.items():
         pdf.cell(200, 8, txt=f"{key}: {value}", ln=True)
 
-    # Convert bytearray to bytes
-    pdf_output = bytes(pdf.output(dest='S'))
+    # ✅ FIXED: encode string to bytes
+    pdf_output = pdf.output(dest='S').encode('latin1')
     return pdf_output
 
 # ---------------- Prediction ----------------
