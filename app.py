@@ -144,7 +144,7 @@ def generate_pdf(result, values):
     for key, value in values.items():
         pdf.cell(200, 8, txt=f"{key}: {value}", ln=True)
 
-    # ✅ Convert bytearray to bytes for Streamlit
+    # Convert bytearray to bytes
     pdf_output = bytes(pdf.output(dest='S'))
     return pdf_output
 
@@ -230,4 +230,4 @@ with st.expander("ℹ️ About this Application"):
     **Reports:** DOCX and Premium PDF download  
     """)
 
-st.markdown("<p class='footer'>© 2025 | Designed By Abhijit Shete</p>", unsafe_allow_html=True)
+st.markdown("<p class='footer'>© 2025 | Designed by Abhijit Shete</p>", unsafe_allow_html=True)
