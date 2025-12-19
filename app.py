@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
 from io import BytesIO
-import numpy as np
 from fpdf import FPDF
 from docx import Document
 
@@ -143,7 +142,7 @@ def generate_pdf(result, values):
     for key, value in values.items():
         pdf.cell(200, 8, txt=f"{key}: {value}", ln=True)
 
-    # ✅ FIXED: encode string to bytes
+    # ✅ FIXED: convert string output to bytes using encoding
     pdf_output = pdf.output(dest='S').encode('latin1')
     return pdf_output
 
@@ -178,15 +177,11 @@ if predict:
     values_list = [pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]
 
     fig, ax = plt.subplots(figsize=(10,5))
-    fig.patch.set_alpha(0.0)
-    ax.patch.set_alpha(0.0)
-    ax.plot(labels, values_list, marker="o", linewidth=2, color="white", markerfacecolor="white")
-    ax.set_title("Health Metrics Overview", fontsize=16, color="white")
-    ax.set_xlabel("Health Parameters", color="white")
-    ax.set_ylabel("Values", color="white")
-    ax.tick_params(axis='x', colors="white")
-    ax.tick_params(axis='y', colors="white")
-    ax.grid(True, alpha=0.2, color="white")
+    ax.plot(labels, values_list, marker="o", linewidth=2, color="green")
+    ax.set_title("Health Metrics Overview", fontsize=16)
+    ax.set_xlabel("Health Parameters")
+    ax.set_ylabel("Values")
+    ax.grid(True, alpha=0.2)
     plt.xticks(rotation=30)
     st.pyplot(fig)
 
