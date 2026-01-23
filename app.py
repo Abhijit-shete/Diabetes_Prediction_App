@@ -133,12 +133,14 @@ def generate_docx(result, values):
     file_stream.seek(0)
     return file_stream
 
+# ---------------- PDF Function (DEPLOYMENT-SAFE) ----------------
 def generate_pdf(result, values, customer):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", 'B', 14)
 
     result_safe = result.replace("—", "-")
+
     pdf.cell(200, 10, txt="Diabetes Prediction Report", ln=True, align='C')
     pdf.ln(5)
 
