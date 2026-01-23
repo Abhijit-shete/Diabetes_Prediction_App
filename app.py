@@ -78,7 +78,7 @@ body {
 
 # ---------------- App Title ----------------
 st.markdown("<h1 class='main-title'>Diabetes Prediction System</h1>", unsafe_allow_html=True)
-st.markdown("<p class='version-tag'>Version 2.5 • Designed by Abhijit Shete</p>", unsafe_allow_html=True)
+st.markdown("<p class='version-tag'>Version 2.6 • Designed by Abhijit Shete</p>", unsafe_allow_html=True)
 st.markdown("---")
 
 # ---------------- Sidebar Inputs ----------------
@@ -160,8 +160,13 @@ def generate_pdf(result, values, customer):
     for key, value in values.items():
         pdf.cell(200, 8, txt=f"{key}: {value}", ln=True)
 
-    pdf_output = pdf.output(dest='S')
-    return bytes(pdf_output)
+    pdf_output = pdf.output(dest="S")
+
+    # ✅ FINAL DEPLOYMENT-SAFE FIX
+    if isinstance(pdf_output, str):
+        return pdf_output.encode("latin1")
+    else:
+        return bytes(pdf_output)
 
 # ---------------- Prediction ----------------
 predict = st.button("🚀 Predict")
