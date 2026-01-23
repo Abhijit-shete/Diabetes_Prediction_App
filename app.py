@@ -82,7 +82,14 @@ st.markdown("<p class='version-tag'>Version 2.5 • Designed by Abhijit Shete</p
 st.markdown("---")
 
 # ---------------- Sidebar Inputs ----------------
+st.sidebar.header("🧾 Customer Details")
+customer_name = st.sidebar.text_input("👤 Customer Name")
+customer_address = st.sidebar.text_area("🏠 Address")
+customer_mobile = st.sidebar.text_input("📞 Mobile Number")
+
+st.sidebar.markdown("---")
 st.sidebar.header("📌 Enter Your Health Details or Upload CSV")
+
 file = st.sidebar.file_uploader("Upload CSV to auto-fill values", type=["csv"])
 
 pregnancies = glucose = bp = skin = insulin = bmi = dpf = age = None
@@ -126,25 +133,35 @@ def generate_docx(result, values):
     file_stream.seek(0)
     return file_stream
 
-def generate_pdf(result, values):
+def generate_pdf(result, values, customer):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", 'B', 14)
+
     result_safe = result.replace("—", "-")
     pdf.cell(200, 10, txt="Diabetes Prediction Report", ln=True, align='C')
     pdf.ln(5)
+
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 8, txt="Customer Details", ln=True)
+    pdf.set_font("Arial", size=11)
+    pdf.cell(200, 7, txt=f"Name: {customer['name']}", ln=True)
+    pdf.cell(200, 7, txt=f"Mobile No: {customer['mobile']}", ln=True)
+    pdf.multi_cell(0, 7, txt=f"Address: {customer['address']}")
+
+    pdf.ln(4)
     pdf.set_font("Arial", size=12)
     pdf.cell(200, 10, txt=f"Prediction Result: {result_safe}", ln=True)
-    pdf.ln(5)
+    pdf.ln(3)
+
     pdf.set_font("Arial", 'B', 12)
     pdf.cell(200, 10, txt="Input Health Metrics:", ln=True)
     pdf.set_font("Arial", size=11)
     for key, value in values.items():
         pdf.cell(200, 8, txt=f"{key}: {value}", ln=True)
 
-    # ✅ FIXED: convert string output to bytes using encoding
-    pdf_output = pdf.output(dest='S').encode('latin1')
-    return pdf_output
+    pdf_output = pdf.output(dest='S')
+    return bytes(pdf_output)
 
 # ---------------- Prediction ----------------
 predict = st.button("🚀 Predict")
@@ -152,7 +169,7 @@ if predict:
     data = pd.DataFrame([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]],
                         columns=["Pregnancies","Glucose","BloodPressure","SkinThickness",
                                  "Insulin","BMI","DiabetesPedigreeFunction","Age"])
-    
+
     data_scaled = scaler.transform(data)
     prediction = model.predict(data_scaled)
     prob = model.predict_proba(data_scaled)[0][1]
@@ -170,7 +187,6 @@ if predict:
 
     st.info(f"Prediction Probability: {prob*100:.2f}%")
 
-    # ---------------- Line Graph ----------------
     st.subheader("📈 Your Health Metrics (Line Chart View)")
     labels = ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
               "Insulin", "BMI", "DPF", "Age"]
@@ -178,9 +194,6 @@ if predict:
 
     fig, ax = plt.subplots(figsize=(10,5))
     ax.plot(labels, values_list, marker="o", linewidth=2, color="green")
-    ax.set_title("Health Metrics Overview", fontsize=16)
-    ax.set_xlabel("Health Parameters")
-    ax.set_ylabel("Values")
     ax.grid(True, alpha=0.2)
     plt.xticks(rotation=30)
     st.pyplot(fig)
@@ -196,6 +209,12 @@ if predict:
         "Age": age
     }
 
+    customer_details = {
+        "name": customer_name or "N/A",
+        "address": customer_address or "N/A",
+        "mobile": customer_mobile or "N/A"
+    }
+
     docx_file = generate_docx(result_text, values_dict)
     st.download_button(
         label="📄 Download DOCX Report",
@@ -204,7 +223,7 @@ if predict:
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
 
-    pdf_file = generate_pdf(result_text, values_dict)
+    pdf_file = generate_pdf(result_text, values_dict, customer_details)
     st.download_button(
         label="📄 Download Premium PDF Report",
         data=pdf_file,
@@ -217,11 +236,16 @@ with st.expander("ℹ️ About this Application"):
     st.write("""
     This app predicts diabetes risk using machine learning.
 
-    **Model:** RandomForest / Logistic Regression  
-    **Scaling:** StandardScaler  
-    **Features Used:** Glucose, BP, BMI, Insulin, Age, Pedigree Function  
-    **Automatic Input:** Manual input or CSV upload  
-    **Reports:** DOCX and Premium PDF download  
+    **Model:** RandomForest / Logistic Regression 
+
+    **Scaling:** StandardScaler
+
+    **Features Used:** Glucose, BP, BMI, Insulin, Age, Pedigree Function 
+    
+    **Automatic Input:** Manual input or CSV upload 
+
+    **Reports:** DOCX and Premium PDF download
+
     """)
 
 st.markdown("<p class='footer'>© 2025 | Designed by Abhijit Shete</p>", unsafe_allow_html=True)
