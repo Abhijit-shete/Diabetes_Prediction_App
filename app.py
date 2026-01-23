@@ -235,17 +235,6 @@ if predict:
 with st.expander("ℹ️ About this Application"):
     st.write("""
     This app predicts diabetes risk using machine learning.
-
-    **Model:** RandomForest / Logistic Regression 
-
-    **Scaling:** StandardScaler
-
-    **Features Used:** Glucose, BP, BMI, Insulin, Age, Pedigree Function 
-    
-    **Automatic Input:** Manual input or CSV upload 
-
-    **Reports:** DOCX and Premium PDF download
-
     """)
 
 st.markdown("<p class='footer'>© 2025 | Designed by Abhijit Shete</p>", unsafe_allow_html=True)
